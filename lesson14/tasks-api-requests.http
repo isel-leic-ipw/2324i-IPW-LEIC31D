@@ -1,0 +1,23 @@
+
+### Get all tasks
+GET http://localhost:1904/tasks
+
+### Get a Task
+GET http://localhost:1904/tasks/10
+
+### Create a Task
+
+POST http://localhost:1904/tasks
+content-type: application/json
+
+{
+    "n": "Learn HTTP",
+    "d": "Learning HTTP is very important to develop web applications"
+}
+
+### Delete a Task
+DELETE http://localhost:1904/tasks/1
+
+### Update a Task
+PUT http://localhost:1904/tasks/1
+
