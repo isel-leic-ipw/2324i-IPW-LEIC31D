@@ -1,16 +1,26 @@
-import * as taskServices from './tasks-services.mjs'
+
+const NUM_TASKS = 10
+
+const TASKS = new Array(NUM_TASKS)
+                .fill(0).map((v, idx) => { 
+                    return { 
+                        id: (idx+1), 
+                        name: `Task ${idx+1}`, 
+                        description: `Task ${idx+1} description`,
+                        owner: (idx % 2) + 1
+                    }
+                })
+
+let nextId = TASKS.length+1
 
 export function getAllTasks(req, rsp) {
-
-    const s = req.query.s || 10
-    // rsp.set("Content.-Type", "application/json")
-    // rsp.end(JSON.stringify(TASKS, undefined, 2))
-    const token = getToken(req)
+    let token = getToken(req)
     if(token) {
-        const tasks = taskServices.getAllTasks(token)
-        return rsp.json(tasks)
+        return rsp.json(TASKS)
     }
-    rsp.status(401).json("Not authorized")
+
+    rsp.status(401).json("Invalid user token")
+
     
 }
 
@@ -44,13 +54,15 @@ export function deleteTask(req, rsp) {
         TASKS.splice(taskIdx,1)
         return rsp.json(`Task with id ${id} deleted`)
     }
+
     rsp.status(404).json(`Task with id ${id} not found`)
 }
 
 
-// Auxiliary module function
+// Auxiliary functions 
+
 function getToken(req) {
-    const token = req.get("Authorization")
+    let token = req.get("Authorization")
     if(token) {
         return token.split(" ")[1]
     }

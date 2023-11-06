@@ -15,6 +15,7 @@ let app = express()
 
 
 app.use(cors())
+
 app.use(express.json())
 
 // Get All Tasks: GET /tasks
@@ -33,8 +34,8 @@ app.put('/tasks/:id', tasksApi.updateTask)
 app.delete('/tasks/:id', tasksApi.deleteTask)
 
 
-// Create User: POST /users
-app.post('/users', usersApi.insertUser)
+// Insert Task: POST /tasks
+app.post('/users', usersApi.createUser)
 
 
 app.listen(PORT, () => console.log(`Server listening in http://localhost:${PORT}`))
