@@ -1,17 +1,24 @@
-import * as taskServices from './tasks-services.mjs'
 
-export function getAllTasks(req, rsp) {
+import * as usersServices from './users-services.mjs'
 
-    const s = req.query.s || 10
-    // rsp.set("Content.-Type", "application/json")
-    // rsp.end(JSON.stringify(TASKS, undefined, 2))
-    const token = getToken(req)
-    if(token) {
-        const tasks = taskServices.getAllTasks(token)
-        return rsp.json(tasks)
-    }
-    rsp.status(401).json("Not authorized")
-    
+const NUM_TASKS = 6
+
+const TASKS = new Array(NUM_TASKS)
+                .fill(0).map((v, idx) => { 
+                    return { 
+                        id: (idx+1), 
+                        name: `Task ${idx+1}`, 
+                        description: `Task ${idx+1} description`,
+                        userId: (idx % 2) + 1
+                     }
+                })
+
+let nextId = TASKS.length+1
+
+export function getAllTasks(userToken) {
+    const userId = usersServices.getUserId(userToken)
+    console.log(userId)
+    return TASKS.filter(t => t.userId == userId)   
 }
 
 export function getTask(req, rsp) {
