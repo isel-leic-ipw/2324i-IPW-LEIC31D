@@ -1,4 +1,7 @@
 
+import swaggerUi from 'swagger-ui-express'
+import yaml from 'yamljs'
+
 import cors from 'cors'
 import express from 'express'
 import * as tasksApi from './tasks-web-api.mjs'
@@ -6,15 +9,15 @@ import * as usersApi from './users-web-api.mjs'
 
 const PORT = 1904
 
+const swaggerDocument = yaml.load('./docs/tasks-api.yaml')
+
+
 console.log("Setting up server")
 let app = express()
 
-// Contained resources
-// - Tasks: /tasks
-// - Task:  /tasks/:id
-
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use(cors())
+
 app.use(express.json())
 
 // Get All Tasks: GET /tasks
@@ -33,8 +36,8 @@ app.put('/tasks/:id', tasksApi.updateTask)
 app.delete('/tasks/:id', tasksApi.deleteTask)
 
 
-// Create User: POST /users
-app.post('/users', usersApi.insertUser)
+// Insert Task: POST /tasks
+app.post('/users', usersApi.createUser)
 
 
 app.listen(PORT, () => console.log(`Server listening in http://localhost:${PORT}`))

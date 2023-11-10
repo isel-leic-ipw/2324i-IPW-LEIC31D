@@ -5,7 +5,7 @@ import * as usersServices from './users-services.mjs'
 
 
 
-export function insertUser(req, rsp) {
+export function createUser(req, rsp) {
     const username = req.body.username
 
     if(usersServices.insertUser(username)) {

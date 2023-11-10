@@ -7,13 +7,14 @@
     "test": "mocha",
     "start": "node tasks-server.mjs",
     "start-dev": "nodemon tasks-server.mjs"
-  
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "swagger-ui-express": "^5.0.0",
+    "yamljs": "^0.3.0"
   }
 }
