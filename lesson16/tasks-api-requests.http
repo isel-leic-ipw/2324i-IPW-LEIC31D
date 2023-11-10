@@ -1,0 +1,35 @@
+@token = b351d48c-1fc0-4cbf-a184-52c9138b0305
+
+// Create User
+POST http://localhost:1904/users
+Content-Type: application/json
+
+{
+    "username": "jj"
+}
+
+
+
+### Get all tasks
+GET http://localhost:1904/tasks?a=123
+Authorization: Bearer {{token}}
+
+### Get a Task
+GET http://localhost:1904/tasks/10
+
+### Create a Task
+
+POST http://localhost:1904/tasks
+Content-Type: application/json
+
+{
+    "n": "Learn HTTP",
+    "d": "Learning HTTP is very important to develop web applications"
+}
+
+### Delete a Task
+DELETE http://localhost:1904/tasks/1
+
+### Update a Task
+PUT http://localhost:1904/tasks/1
+
