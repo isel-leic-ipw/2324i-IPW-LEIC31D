@@ -59,26 +59,28 @@ paths:
       description: By passing in the appropriate options, you can search for available
         Tasks
       operationId: getTasks
-      #parameters:
-        # - name: q
-        #   in: query
-        #   description: Query to match in task title
-        #   schema: 
-        #     type: string
-        #   required: false
-      #- name: skip
-      #   in: query
-      #   description: number of records to skip for pagination
-      #   schema:
-      #     minimum: 0
-      #     type: integer
-      # - name: limit
-      #   in: query
-      #   description: maximum number of records to return
-      #   schema:
-      #     maximum: 50
-      #     minimum: 0
-      #     type: integer
+      parameters:
+        - name: keyword
+          in: query
+          description: Query to match in task title
+          schema: 
+            type: string
+          required: false
+        - name: s
+          in: query
+          description: number of tasks to return
+          schema:
+            default: 30
+            minimum: 0
+            type: integer
+        - name: p
+          in: query
+          description: The page number
+          schema:
+            maximum: 50
+            minimum: 0
+            default: 1
+            type: integer
       responses:
         200:
           description: get all tasks, with the specified criteria and pagination 
@@ -98,13 +100,6 @@ paths:
       operationId: addTask
       security:
         - bearerAuth: []
-      parameters:
-      - name: Authorization
-        in: header
-        required: true
-        schema:
-          type: string
-          format: uuid
       requestBody:
         description: Task to add
         content:
@@ -132,11 +127,6 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-      - name: Authorization
-        in: header
-        schema:
-          type: string
-          format: uuid
       - name: taskId
         in: path
         description: ID of task that to be fetched
@@ -161,15 +151,7 @@ paths:
       summary: updates a task
       description: Updates a Task in the system
       operationId: updateTask
-      security:
-        - bearerAuth: []
       parameters:
-      - name: Authorization
-        in: header
-        required: true
-        schema:
-          type: string
-          format: uuid
       - name: taskId
         in: path
         description: ID of the task to be deleted
@@ -184,7 +166,7 @@ paths:
               $ref: '#/components/schemas/NewTask'
         required: false
       responses:
-        201:
+        200:
           description: task updated
           content: {}
         404:
@@ -195,8 +177,6 @@ paths:
       summary: Delete a task by ID
       description: Delete a task by ID
       operationId: deleteTask
-      security:
-        - bearerAuth: []
       parameters:
       - name: taskId
         in: path
@@ -221,7 +201,6 @@ components:
     NewTask:
       required:
       - title
-      - userId
       type: object
       properties:
         title:
@@ -230,17 +209,18 @@ components:
         description:
           type: string
           example: To develop web applications, knowing HTTP is fundamental
-        userId:
-          type: integer
-          example: 1
     Task:
       allOf: 
         - $ref: "#/components/schemas/NewTask"
         - type: object
           required:
           - id
+          - userId
           properties:
             id:
+              type: integer
+              example: 1
+            userId:
               type: integer
               example: 1
     NewUser:

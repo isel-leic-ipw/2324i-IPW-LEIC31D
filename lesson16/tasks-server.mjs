@@ -1,11 +1,14 @@
 
+/// Module responsibilities: HTTP Server initialization: Create the Express application, register the routes and start 
+/// the server for accepting requests
+
 import swaggerUi from 'swagger-ui-express'
 import yaml from 'yamljs'
 
 import cors from 'cors'
 import express from 'express'
-import * as tasksApi from './tasks-web-api.mjs'
-import * as usersApi from './users-web-api.mjs'
+import * as tasksApi from './web/api/tasks-web-api.mjs'
+import * as usersApi from './web/api/users-web-api.mjs'
 
 const PORT = 1904
 

@@ -1,3 +1,6 @@
+/// Module responsibilities: Implement all task management functionalities
+
+
 
 import * as usersServices from './users-services.mjs'
 
@@ -7,7 +10,7 @@ const TASKS = new Array(NUM_TASKS)
                 .fill(0).map((v, idx) => { 
                     return { 
                         id: (idx+1), 
-                        name: `Task ${idx+1}`, 
+                        title: `Task ${idx+1}`, 
                         description: `Task ${idx+1} description`,
                         userId: (idx % 2) + 1
                      }
@@ -21,7 +24,7 @@ export function getAllTasks(userToken) {
     return TASKS.filter(t => t.userId == userId)   
 }
 
-export function getTask(req, rsp) {
+export function getTask(idTask, token) {
     const id = req.params.id 
     const task = TASKS.find(t => t.id == id)
     if(task)
@@ -32,7 +35,7 @@ export function getTask(req, rsp) {
 export function insertTask(req, rsp) {
     const task = {
         id: nextId++,
-        name: req.body.n,
+        title: req.body.n,
         description: req.body.d
     }
 
