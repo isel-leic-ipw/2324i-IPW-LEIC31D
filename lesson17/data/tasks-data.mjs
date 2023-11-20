@@ -1,4 +1,5 @@
 
+import errors from '../common/errors.mjs'
 
 const NUM_TASKS = 6
 
@@ -63,6 +64,6 @@ function getTaskIdx(taskId) {
     if(taskIdx != -1) {
         return taskIdx
     }
-    throw `Task with id ${taskId} not found`
+    throw errors.NOT_FOUND("Task")
 }
 

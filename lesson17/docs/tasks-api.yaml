@@ -245,6 +245,9 @@ components:
     MissingParameter:
       type: object
       properties:
+        code: 
+          type: integer
+          example: 1
         error:
           type: string
           example: "Missing required parameter"

@@ -1,5 +1,5 @@
 import crypto from 'node:crypto'
-
+import errors from '../common/errors.mjs'
 
 const USERS = [
     {
@@ -17,7 +17,7 @@ const USERS = [
 let nextId = USERS.length+1
 
 
-export function insertUser(username) {
+export async function insertUser(username) {
     if(!USERS.find(u => u.name == username)) {
         const user = {
             id: nextIdp++,
@@ -33,7 +33,7 @@ export function insertUser(username) {
 }
 
 
-export function getUserId(userToken) {
+export async function getUserId(userToken) {
     console.log(userToken)
     const user = USERS.find(u => {
         console.log(u.token)
@@ -43,4 +43,6 @@ export function getUserId(userToken) {
     if(user) {
         return user.id
     }
+    
+    throw errors.USER_NOT_FOUND()
 }

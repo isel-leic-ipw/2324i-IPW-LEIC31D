@@ -14,7 +14,7 @@ GET http://localhost:1904/tasks
 Authorization: Bearer {{token}}
 
 ### Get a Task
-GET http://localhost:1904/tasks/1
+GET http://localhost:1904/tasks/abc
 Authorization: Bearer {{token}}
 
 ### Create a Task
