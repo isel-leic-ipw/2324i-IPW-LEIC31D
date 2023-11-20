@@ -1,67 +1,47 @@
-/// Module responsibilities: Implement all task management functionalities
-
-
 
 import * as usersServices from './users-services.mjs'
+import * as tasksData from '../data/tasks-data.mjs'
 
-const NUM_TASKS = 6
-
-const TASKS = new Array(NUM_TASKS)
-                .fill(0).map((v, idx) => { 
-                    return { 
-                        id: (idx+1), 
-                        title: `Task ${idx+1}`, 
-                        description: `Task ${idx+1} description`,
-                        userId: (idx % 2) + 1
-                     }
-                })
-
-let nextId = TASKS.length+1
-
-export function getAllTasks(userToken) {
+export async function getAllTasks(userToken) {
     const userId = usersServices.getUserId(userToken)
-    console.log(userId)
-    return TASKS.filter(t => t.userId == userId)   
+    return tasksData.getTasks(userId)
 }
 
-export function getTask(idTask, token) {
-    const id = req.params.id 
-    const task = TASKS.find(t => t.id == id)
-    if(task)
-        return rsp.json(task)
-    rsp.status(404).json("Task not found")
+export async function getTask(taskId, userToken) {
+    const userId = usersServices.getUserId(userToken)
+    return _getTask(taskId, userId)
 }
 
-export function insertTask(req, rsp) {
+export async function insertTask(newTask, userToken) {
+    const userId = usersServices.getUserId(userToken)
     const task = {
-        id: nextId++,
-        title: req.body.n,
-        description: req.body.d
+        title: newTask.title,
+        description: newTask.description,
+        userId: userId
     }
-
-    TASKS.push(task)
-    rsp.status(201).json(task)
+    return tasksData.insertTask(task)
 }
 
-export function updateTask(req, rsp) {
-    rsp.end(`PUT task with id ${req.params.id}`)
+export async function updateTask(taskId, newTask, userToken) {
+    const userId = usersServices.getUserId(userToken)
+    const task = _getTask(taskId, userId)
+    task.title = newTask.title
+    task.description = newTask.description
+    tasksData.updateTask(task)
 }
 
-export function deleteTask(req, rsp) {
-    const id = req.params.id
-    const taskIdx = TASKS.findIndex(t => t.id == id)
-    if(taskIdx != -1) {
-        TASKS.splice(taskIdx,1)
-        return rsp.json(`Task with id ${id} deleted`)
-    }
-    rsp.status(404).json(`Task with id ${id} not found`)
+export async function deleteTask(taskId, userToken) {
+    const userId = usersServices.getUserId(userToken)
+    // Get the task to check if the user userId is its owner
+    const task = _getTask(taskId, userId) 
+    tasksData.deleteTask(taskId)
 }
 
 
-// Auxiliary module function
-function getToken(req) {
-    const token = req.get("Authorization")
-    if(token) {
-        return token.split(" ")[1]
-    }
+async function _getTask(taskId, userId) {
+    const task = await tasksData.getTask(taskId)
+    if(task.userId == userId)
+        return task
+    throw `Task with id ${taskId} does not belong to user ${userId}`
 }
+

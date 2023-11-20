@@ -166,7 +166,7 @@ paths:
               $ref: '#/components/schemas/NewTask'
         required: false
       responses:
-        200:
+        201:
           description: task updated
           content: {}
         404:

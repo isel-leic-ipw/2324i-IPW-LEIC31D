@@ -1,13 +1,10 @@
-/// Module responsibilities: Handle all HTTP requests related to user management.
-
-
-
-import * as usersServices from './users-services.mjs'
+   
+import * as usersServices from '../../services/users-services.mjs'
 
 
 
 
-export function createUser(req, rsp) {
+export function insertUser(req, rsp) {
     const username = req.body.username
 
     if(usersServices.insertUser(username)) {
