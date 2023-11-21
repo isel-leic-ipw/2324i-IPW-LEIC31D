@@ -12,9 +12,10 @@ function processRequest(reqProcessor) {
     return async function(req, rsp) {
         const token =  getToken(req)
         if(!token) {
-            rsp.status(401).json("Not authorized")  
+            rsp
+                .status(401)
+                .json({error: `Invalid authentication token`})
         }
-        req.token = token
         try {
             return await reqProcessor(req, rsp)
         } catch (e) {
@@ -69,8 +70,11 @@ async  function _deleteTask(req, rsp) {
 
 // Auxiliary module function
 function getToken(req) {
-    const token = req.get("Authorization")
-    if(token) {
-        return token.split(" ")[1]
+    const BEARER_STR = "Bearer "
+    const tokenHeader = req.get("Authorization")
+    if(!(tokenHeader && tokenHeader.startsWith(BEARER_STR) && tokenHeader.length > BEARER_STR.length)) {
+        return null
     }
+    req.token = tokenHeader.split(" ")[1]
+    return req.token
 }
