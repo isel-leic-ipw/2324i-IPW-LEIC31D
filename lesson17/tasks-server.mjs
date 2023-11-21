@@ -3,7 +3,7 @@ import swaggerUi from 'swagger-ui-express'
 import yaml from 'yamljs'
 
 import cors from 'cors'
-import express from 'express'
+import express, { json } from 'express'
 import * as tasksApi from './web/api/tasks-web-api.mjs'
 import * as usersApi from './web/api/users-web-api.mjs'
 
@@ -18,12 +18,32 @@ let app = express()
 // - Task:  /tasks/:id
 
 
-app.use('/slb', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use(cors())
 app.use(express.json())
 
+
+
 // Get All Tasks: GET /tasks
-app.get('/tasks', tasksApi.getAllTasks)
+
+app.use(foo)
+
+app.get('/foo', foo, fooEnd)
+
+app.get('/tasks', foo, tasksApi.getAllTasks)
+
+function foo(req, rsp, next) {
+    console.log("Foo called")
+    //rsp.end("Foo called")
+    next()
+}
+
+function fooEnd(req, rsp, next) {
+    console.log("FooEnd called")
+    //rsp.end("Foo called")
+    next()
+}
+
 
 // Get one Task: GET /tasks/:id
 app.get('/tasks/:id', tasksApi.getTask)
