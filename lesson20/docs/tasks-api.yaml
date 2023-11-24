@@ -1,0 +1,287 @@
+openapi: 3.0.1
+info:
+  title: Tasks API
+  description: This is a simple API for managing tasks
+  contact:
+    email: luis.falcao@isel.pt
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - description: Localhost server for testing API
+    url: http://localhost:1904
+
+security:
+  - bearerAuth: []
+tags:
+- name: Tasks
+- name: Users
+paths:
+  /users:
+    description: The resource that contains all users
+    post:
+      tags:
+      - Users
+      summary: adds a user
+      description: Adds a user to the system
+      operationId: addUser
+      security: []
+      requestBody:
+        description: User to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+        required: true
+      responses:
+        201:
+          description: user created
+          content:
+            application/json:
+              schema:
+                required:
+                - token
+                type: object
+                properties:
+                  token:
+                    type: string
+                    format: uuid
+        400:
+          description: Invalid input, object invalid
+          content: {}
+  /tasks:
+    description: Resource that contains all Tasks
+    get:
+      tags:
+      - Tasks
+      summary: get Tasks
+      description: By passing in the appropriate options, you can search for available
+        Tasks
+      operationId: getTasks
+      parameters:
+        - name: keyword
+          in: query
+          description: Query to match in task title
+          schema: 
+            type: string
+          required: false
+        - name: s
+          in: query
+          description: number of tasks to return
+          schema:
+            default: 30
+            minimum: 0
+            type: integer
+        - name: p
+          in: query
+          description: The page number
+          schema:
+            maximum: 50
+            minimum: 0
+            default: 1
+            type: integer
+      responses:
+        200:
+          description: get all tasks, with the specified criteria and pagination 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        400:
+          $ref: "#/components/responses/400BadRequest"          
+    post:
+      tags:
+      - Tasks
+      summary: adds a task
+      description: Adds a task to the system
+      operationId: addTask
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Task to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTask'
+        required: false
+      responses:
+        201:
+          description: Task created
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewTaskCreated'
+        400:
+          description: Invalid input, object invalid
+          content: {}
+  /tasks/{taskId}:
+    description: The resource that represents one Task
+    get:
+      tags:
+      - Tasks
+      summary: Get a task given its id
+      operationId: getTaskById
+      security:
+        - bearerAuth: []
+      parameters:
+      - name: taskId
+        in: path
+        description: ID of task that to be fetched
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        404:
+          $ref: "#/components/responses/404NotFound"                
+    put:
+      tags:
+      - Tasks
+      summary: updates a task
+      description: Updates a Task in the system
+      operationId: updateTask
+      parameters:
+      - name: taskId
+        in: path
+        description: ID of the task to be deleted
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        description: Task to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTask'
+        required: false
+      responses:
+        201:
+          description: task updated
+          content: {}
+        404:
+          $ref: "#/components/responses/404NotFound"  
+    delete:
+      tags:
+      - Tasks
+      summary: Delete a task by ID
+      description: Delete a task by ID
+      operationId: deleteTask
+      parameters:
+      - name: taskId
+        in: path
+        description: ID of the task to be deleted
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: "Task successfully deleted"
+          content: {}
+        400:
+          $ref: "#/components/responses/400BadRequest"
+        404:
+          $ref: "#/components/responses/404NotFound"
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+  schemas:
+    NewTask:
+      required:
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+          example: Study Http
+        description:
+          type: string
+          example: To develop web applications, knowing HTTP is fundamental
+    Task:
+      allOf: 
+        - $ref: "#/components/schemas/NewTask"
+        - type: object
+          required:
+          - id
+          - userId
+          properties:
+            id:
+              type: integer
+              example: 1
+            userId:
+              type: integer
+              example: 1
+    NewUser:
+      type: object
+      required:
+      - userName
+      properties:
+        userName:
+          type: string
+          example: antonio.silva
+    NewTaskCreated:
+      required:
+      - status
+      - task
+      type: object
+      properties:
+        status:
+          type: string
+          example: Task with id 123 created with success
+        task:
+          $ref: '#/components/schemas/Task'
+    MissingParameter:
+      type: object
+      properties:
+        code: 
+          type: integer
+          example: 1
+        error:
+          type: string
+          example: "Missing required parameter"
+    InvalidBody:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid body content"
+    NotFound: 
+      type: object
+      properties:
+        uri:
+          type: string
+          format: uri
+          example: "/tasks/1"
+        description:
+          type: string
+          example: "Task with id 1 not found"
+  responses: 
+    404NotFound:
+      description: "Resource not found"
+      content: 
+        application/json:
+          schema: 
+            $ref: "#/components/schemas/NotFound"
+    400BadRequest:
+      description: "Invalid Request because of a missing Parameter or invalid body content"
+      content: 
+        application/json:
+          schema: 
+            oneOf:
+              - $ref: "#/components/schemas/MissingParameter"
+              - $ref: "#/components/schemas/InvalidBody"
+              
+            
+      
