@@ -1,0 +1,59 @@
+What is a Web API?
+
+Is a bunch of resources and the supported operations for each resource.
+
+A web API contains:
+    - Resources
+      - Each resource must have its own an URI
+    - Operations
+      - What operations each resource supports (GET, PUT, POST, DELETE)
+
+For each resource we must define its supported operations.
+For each operation we must define:
+    - Request (what and where additional request information)
+    - Responses. For each response:
+      - Status code
+      - Headers
+      - Body
+
+
+
+Assignment 2 resources
+- Popular Events
+    - Description: Set of popular events
+    - URI: /events/popular
+    - Operations: GET
+- Events 
+    - Description: Set of all events
+    - URI: /events
+    - Operations: GET
+- Groups
+    - Description: Set of all groups
+    - URI: /groups
+    - Operations: GET, POST
+- Group
+    - Description: A specific group
+    - URI: /groups/:group-id
+    - Operations: GET, DELETE, PUT, POST
+Group Event
+    - Description: An event in a Group
+    - URI: /groups/:group-id/:event-id/:id
+    - Operations: DELETE, PUT
+
+- User
+    - Description: A specific user
+
+
+
+Manage favorite events groups
+x - Create group providing its name and description
+x - Edit group by changing its name and description -
+x - List all groups 
+x - Delete a group
+x - Get the details of a group, with its name and description and the list of its events with, for each event, its name, date, and, if available, its segment and genre.
+x - Add a event to a group
+- Remove a event from a group
+- Create new user, given its username
+
+
+
