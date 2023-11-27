@@ -4,8 +4,24 @@ import yaml from 'yamljs'
 
 import cors from 'cors'
 import express from 'express'
-import * as tasksApi from './web/api/tasks-web-api.mjs'
-import * as usersApi from './web/api/users-web-api.mjs'
+
+
+import tasksApiInit from './web/api/tasks-web-api.mjs'
+import taskServicesInit from './services/tasks-services.mjs'
+import userServicesInit from './services/users-services.mjs'
+import usersApiInit from './services/users-services.mjs'
+import tasksDataInit from './data/tasks-data.mjs'
+//import tasksDataInit from './data/tasks-data-db.mjs'
+//import usersDataInit from './data/users-data.mjs'
+
+const tasksData = tasksDataInit()
+//const usersData = usersDataInit()
+//const usersServices = userServicesInit(usersData)
+const usersServices = userServicesInit()
+const tasksServices = taskServicesInit(usersServices, tasksData)
+const tasksApi = tasksApiInit(tasksServices)
+const usersApi = usersApiInit(usersServices)
+
 
 const PORT = 1904
 const swaggerDocument = yaml.load('./docs/tasks-api.yaml')
@@ -18,8 +34,8 @@ let app = express()
 // - Task:  /tasks/:id
 
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use(cors())
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use(express.json())
 
 

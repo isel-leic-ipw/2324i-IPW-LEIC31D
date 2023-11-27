@@ -13,7 +13,7 @@ GET http://localhost:1904/tasks
 Authorization: Bearer {{token}}
 
 ### Get a Task
-GET http://localhost:1904/tasks/abc
+GET http://localhost:1904/tasks/1
 Authorization: Bearer {{token}}
 
 ### Create a Task
@@ -31,7 +31,16 @@ DELETE http://localhost:1904/tasks/1
 Authorization: Bearer {{token}}
 
 ### Update a Task
-PUT http://localhost:1904/tasks/1
+PUT http://localhost:1904/tasks/7
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "Learn HTTP more deeply",
+    "description": "Learning HTTP is very, very important to develop web applications"
+}
+
+
 
 ###
 https://www.w3.org/TR/webarch/
