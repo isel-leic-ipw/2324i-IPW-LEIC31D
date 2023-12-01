@@ -35,7 +35,7 @@ export default function(taskServices) {
 
     async function  _getAllTasks(req, rsp) {
         const tasks = await taskServices.getAllTasks(req.token)
-        rsp.json(tasks)
+        rsp.render('tasks', {tasks})
         
         // return taskServices.getAllTasks(req.token)
         //     .then(tasks => rsp.json(tasks))
@@ -45,9 +45,21 @@ export default function(taskServices) {
     async function _getTask(req, rsp) {
         const id = req.params.id
         const task = await taskServices.getTask(id, req.token)
-        if(task)
-            return rsp.json(task)
-        rsp.status(404).json("Task not found")
+        var htmlTask = `
+        <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>Task 1 details</title>
+                </head>
+                <body>
+                    <h1>Task Details</h1>
+                    <p>Task name: ${task.title}</p>
+                    <p>Task description: ${task.description}</p>
+                </body>
+            </html>`
+        rsp.type('html')
+        rsp.send(htmlTask)
+        
     }
 
     async function _insertTask(req, rsp) {
@@ -77,13 +89,8 @@ export default function(taskServices) {
 
     // Auxiliary module function
     function getToken(req) {
-        const BEARER_STR = "Bearer "
-        const tokenHeader = req.get("Authorization")
-        if(!(tokenHeader && tokenHeader.startsWith(BEARER_STR) && tokenHeader.length > BEARER_STR.length)) {
-            return null
-        }
-        req.token = tokenHeader.split(" ")[1]
-        return req.token
+        // TODO: Handle toke properly 
+        return req.token = "14d72b99-48f6-48d3-94d3-5a4dcfd96c80"
     }
 }
 

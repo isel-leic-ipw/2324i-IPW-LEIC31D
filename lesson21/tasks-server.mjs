@@ -6,6 +6,8 @@ import cors from 'cors'
 import express from 'express'
 
 
+import * as staticWebSite from './web/site/static-web-site.mjs'
+import tasksSiteInit from './web/site/tasks-web-site.mjs'
 import tasksApiInit from './web/api/tasks-web-api.mjs'
 import taskServicesInit from './services/tasks-services.mjs'
 import userServicesInit from './services/users-services.mjs'
@@ -22,6 +24,7 @@ const tasksServices = taskServicesInit(usersServices, tasksData)
 const tasksApi = tasksApiInit(tasksServices)
 const usersApi = usersApiInit(usersServices)
 
+const tasksSite = tasksSiteInit(tasksServices)
 
 const PORT = 1904
 const swaggerDocument = yaml.load('./docs/tasks-api.yaml')
@@ -37,29 +40,19 @@ let app = express()
 app.use(cors())
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use(express.json())
-
+app.use('/site', express.static('./web/site/public'))
 
 
 // Get All Tasks: GET /tasks
 
-app.use(foo)
+// Web site routes
 
-app.get('/foo', foo, fooEnd)
+app.get('/site/home', staticWebSite.getHome)
+app.get('/site/slb', staticWebSite.getImage)
+app.get('/site/tasks/:id', tasksSite.getTask)
 
-app.get('/tasks', foo, tasksApi.getAllTasks)
-
-function foo(req, rsp, next) {
-    console.log("Foo called")
-    //rsp.end("Foo called")
-    next()
-}
-
-function fooEnd(req, rsp, next) {
-    console.log("FooEnd called")
-    //rsp.end("Foo called")
-    next()
-}
-
+// Web API routes
+app.get('/tasks', tasksApi.getAllTasks)
 
 // Get one Task: GET /tasks/:id
 app.get('/tasks/:id', tasksApi.getTask)
