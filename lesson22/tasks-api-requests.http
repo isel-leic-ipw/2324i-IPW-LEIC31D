@@ -1,0 +1,50 @@
+#@token = 14d72b99-48f6-48d3-94d3-5a4dcfd96c81
+@token = 14d72b99-48f6-48d3-94d3-5a4dcfd96c80
+
+POST http://localhost:1904/users
+Content-Type: application/json
+
+{
+    "username": "jj" 
+}
+
+### Get all tasks
+GET http://localhost:1904/tasks
+Authorization: Bearer {{token}}
+
+### Get a Task
+GET http://localhost:1904/tasks/1
+Authorization: Bearer {{token}}
+
+### Create a Task
+POST http://localhost:1904/tasks
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "Learn HTTP",
+    "description": "Learning HTTP is very important to develop web applications"
+}
+
+### Delete a Task
+DELETE http://localhost:1904/tasks/1
+Authorization: Bearer {{token}}
+
+### Update a Task
+PUT http://localhost:1904/tasks/7
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "Learn HTTP more deeply",
+    "description": "Learning HTTP is very, very important to develop web applications"
+}
+
+
+
+###
+https://www.w3.org/TR/webarch/
+
+
+###
+GET http://localhost:1904/foo
