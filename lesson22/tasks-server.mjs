@@ -4,9 +4,10 @@ import yaml from 'yamljs'
 
 import cors from 'cors'
 import express from 'express'
+import url from 'url'
+import path from 'path'
+import hbs from 'hbs'
 
-
-import * as staticWebSite from './web/site/static-web-site.mjs'
 import tasksSiteInit from './web/site/tasks-web-site.mjs'
 import tasksApiInit from './web/api/tasks-web-api.mjs'
 import taskServicesInit from './services/tasks-services.mjs'
@@ -36,20 +37,34 @@ let app = express()
 // - Tasks: /tasks
 // - Task:  /tasks/:id
 
-
 app.use(cors())
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use(express.json())
+app.use(express.urlencoded())
 app.use('/site', express.static('./web/site/public'))
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+
+// Handlebars view engine setup
+const currentFileDir = url.fileURLToPath(new URL('.', import.meta.url));
+const viewsDir = path.join(currentFileDir, 'web', 'site', 'views')
+app.set('view engine', 'hbs')
+app.set('views', viewsDir);
+
+hbs.registerPartials(path.join(viewsDir, 'partials'))
+hbs.handlebars.registerHelper("slb", function(idx, options) {
+    return idx%2 == 0 ? options.fn(this) : ""
+})
 
 
 // Get All Tasks: GET /tasks
 
 // Web site routes
-
-app.get('/site/home', staticWebSite.getHome)
-app.get('/site/slb', staticWebSite.getImage)
+app.get('/site/tasks', tasksSite.getAllTasks)
 app.get('/site/tasks/:id', tasksSite.getTask)
+app.post('/site/tasks', tasksSite.insertTask)
+app.post('/site/tasks/:id/update', tasksSite.updateTask)
+app.post('/site/tasks/:id/delete', tasksSite.deleteTask)
+
 
 // Web API routes
 app.get('/tasks', tasksApi.getAllTasks)

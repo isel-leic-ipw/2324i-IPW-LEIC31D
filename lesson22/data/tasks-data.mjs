@@ -1,7 +1,7 @@
 
 import errors from '../common/errors.mjs'
 
-const NUM_TASKS = 6
+const NUM_TASKS = 15
 
 const TASKS = new Array(NUM_TASKS)
     .fill(0).map((v, idx) => {

@@ -35,8 +35,9 @@ export default function(taskServices) {
 
     async function  _getAllTasks(req, rsp) {
         const tasks = await taskServices.getAllTasks(req.token)
-        rsp.render('tasks', {tasks})
-        
+        tasks.forEach((t, idx) => t.strong = idx%2)
+        rsp.render('tasks', {tasks: tasks })
+        //rsp.sendFile('./views/tasks.html', {root: './web/site/'})
         // return taskServices.getAllTasks(req.token)
         //     .then(tasks => rsp.json(tasks))
         
@@ -45,20 +46,21 @@ export default function(taskServices) {
     async function _getTask(req, rsp) {
         const id = req.params.id
         const task = await taskServices.getTask(id, req.token)
-        var htmlTask = `
-        <!DOCTYPE html>
-            <html>
-                <head>
-                    <title>Task 1 details</title>
-                </head>
-                <body>
-                    <h1>Task Details</h1>
-                    <p>Task name: ${task.title}</p>
-                    <p>Task description: ${task.description}</p>
-                </body>
-            </html>`
-        rsp.type('html')
-        rsp.send(htmlTask)
+        // var htmlTask = `
+        // <!DOCTYPE html>
+        //     <html>
+        //         <head>
+        //             <title>Task 1 details</title>
+        //         </head>
+        //         <body>
+        //             <h1>Task Details</h1>
+        //             <p>Task name: ${task.title}</p>
+        //             <p>Task description: ${task.description}</p>
+        //         </body>
+        //     </html>`
+        // rsp.type('html')
+        // rsp.send(htmlTask)
+        rsp.render('task', task)
         
     }
 
@@ -68,7 +70,8 @@ export default function(taskServices) {
             description: req.body.description
         }
         const task = await taskServices.insertTask(newTask, req.token)
-        rsp.status(201).json(task)
+        rsp.redirect('/site/tasks')
+        //rsp.render('task-created')
     }
 
     async function _updateTask(req, rsp) {
@@ -89,7 +92,7 @@ export default function(taskServices) {
 
     // Auxiliary module function
     function getToken(req) {
-        // TODO: Handle toke properly 
+        // TODO: HAMMER TIME!!!! Handle toke properly 
         return req.token = "14d72b99-48f6-48d3-94d3-5a4dcfd96c80"
     }
 }
