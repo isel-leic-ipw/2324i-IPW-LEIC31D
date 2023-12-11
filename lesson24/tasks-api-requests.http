@@ -42,9 +42,25 @@ Authorization: Bearer {{token}}
 
 
 
-###
-https://www.w3.org/TR/webarch/
+### Elastic Search requests
+### Get all tasks
+http://localhost:9200/tasks/_search
 
 
-###
-GET http://localhost:1904/foo
+### GET a task
+
+GET http://localhost:9200/tasks/_doc/q9mJWYwBKsMD5eKSeSPN
+
+### get a task from a specific user
+GET http://localhost:9200/tasks/_search?q=userId:2
+
+
+### Delete an index
+
+DELETE http://localhost:9200/tasks
+
+### Create an index
+PUT http://localhost:9200/tasks
+
+### Get an index
+GET http://localhost:9200/tasks

@@ -16,7 +16,7 @@ import usersApiInit from './services/users-services.mjs'
 //import tasksDataInit from './data/memory/tasks-data-mem.mjs'
 import tasksDataInit from './data/elastic/tasks-data-elastic.mjs'
 
-const tasksData = tasksDataInit()
+const tasksData = await tasksDataInit()
 //const usersData = usersDataInit()
 //const usersServices = userServicesInit(usersData)
 const usersServices = userServicesInit()

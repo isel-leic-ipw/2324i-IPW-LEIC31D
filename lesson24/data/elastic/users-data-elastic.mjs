@@ -1,39 +1,41 @@
-// Module manages application users data.
+    // Module manages application users data.
 // In this specific module, data is stored ElasticSearch
 
-
-const NUM_USERS = 2    
-
-let USERS = new Array(NUM_USERS).fill(0, 0, NUM_USERS)
-    .map((_, idx) => { 
-        return {
-            id: idx,
-            username: `User${idx}`,
-            email: `User${idx}@slb.pt`,
-            password: `Pass${idx}`,
-            token: "ef604e80-a351-4d13-b78f-c888f3e63b6" + idx
-        } 
-    })
+import {get, post, del, put} from './fetch-wrapper.mjs'
+import uriManager from './uri-manager.mjs'
 
 
+export default async function (indexName = 'users') {
 
-export async function getUserByToken(token) {
-    const uriUserDocument = ""
-    let resp = await fetch(uriUserDocument)
-    let obj = await resp.json()
+    const URI_MANAGER = uriManager(indexName)
+
+    // Create the index unconditionally. If the index already exists, nothing happiness
     
-    let retObj = Object.assign({id: obj._id}, obj._source)
-    return retObj
-        
+
+    return {
+        getUserByToken,
+        getUserByUsername
+    }
+
+
+
+    async function getUserByToken(token) {
+        return getUserBy("token",  token)
+    }
+
+    async function getUserByUsername(username) {
+        return getUserBy("username", username)
+    }
+
+    async function getUserBy(propName, value) {
+        const uri = `${URI_MANAGER.getAll()}?q=${propName}:${value}`
+        return get(uri)
+            .then(body => body.hits.hits.map(createTaskFromElastic))
+    }
+
+    function createUserFrom(taskElastic) {
+        let user = Object.assign({id: taskElastic._id}, taskElastic._source)
+        return user
+    }
+
 }
-
-export async function getUserByUsername(username) {
-    return getUserBy("username", username)
-}
-
-async function getUserBy(propName, value) {
-    const user = USERS.find(u => u[propName] == value)
-    return user
-}
-
-

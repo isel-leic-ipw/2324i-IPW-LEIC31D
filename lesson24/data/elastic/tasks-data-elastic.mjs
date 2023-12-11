@@ -7,12 +7,11 @@ import {get, post, del, put} from './fetch-wrapper.mjs'
 import uriManager from './uri-manager.mjs'
 
 
-export default function (indexName = 'tasks') {
-
-    const URI_MANAGER = uriManager(indexName)
+export default async function (indexName = 'tasks') {
+    const URI_MANAGER = await uriManager(indexName)
 
     return {
-        getTasks,
+        getTasks: getTasksQuery,
         getTask,
         updateTask,
         insertTask,
@@ -20,7 +19,7 @@ export default function (indexName = 'tasks') {
     }
 
 //    async function getTasks(userId, q, skip, limit) {
-    async function getTasks(userId) {
+    async function getTasksBody(userId) {
         const query = {
             query: {
               match: {
@@ -29,6 +28,22 @@ export default function (indexName = 'tasks') {
             }
           }
         return post(URI_MANAGER.getAll(), query)
+            .then(body => body.hits.hits.map(createTaskFromElastic))
+            //.then(filterTasks)
+
+        // function filterTasks(tasks) {
+        //     const predicate = q ? t => t.title.includes(q) : t => true
+        //     const retTasks = tasks.filter(predicate)
+            
+        //     const end = limit != MAX_LIMIT ? (skip+limit) : retTasks.length
+        //     return retTasks.slice(skip,  end)
+        // }
+
+    }
+
+    async function getTasksQuery(userId) {
+        const uri = `${URI_MANAGER.getAll()}?q=userId:${userId}`
+        return get(uri)
             .then(body => body.hits.hits.map(createTaskFromElastic))
             //.then(filterTasks)
 

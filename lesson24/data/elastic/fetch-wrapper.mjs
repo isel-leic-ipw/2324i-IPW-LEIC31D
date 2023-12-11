@@ -36,8 +36,8 @@ async function fetchInternal(uri, options = { }, body = undefined) {
 
 
     function showResponse(body) {
-        console.log(`Received from ${uri}`)
-        console.log(body)
+        // console.log(`Received from ${uri}`)
+        // console.log(JSON.stringify(body, null, 2))
 
         return body
     }

@@ -1,7 +1,13 @@
+import { put } from './fetch-wrapper.mjs'
+
 const URI_PREFIX='http://localhost:9200/'
 
 
-export default function(index) {
+export default async function(index) {
+
+    // Create the index unconditionally. If the index already exists, nothing happiness
+    await put(`${URI_PREFIX}${index}`)
+
     return {
         getAll: () => `${URI_PREFIX}${index}/_search`,
         get: (id) => `${URI_PREFIX}${index}/_doc/${id}`,
