@@ -13,9 +13,8 @@ import tasksApiInit from './web/api/tasks-web-api.mjs'
 import taskServicesInit from './services/tasks-services.mjs'
 import userServicesInit from './services/users-services.mjs'
 import usersApiInit from './services/users-services.mjs'
-import tasksDataInit from './data/tasks-data.mjs'
-//import tasksDataInit from './data/tasks-data-db.mjs'
-//import usersDataInit from './data/users-data.mjs'
+//import tasksDataInit from './data/memory/tasks-data-mem.mjs'
+import tasksDataInit from './data/elastic/tasks-data-elastic.mjs'
 
 const tasksData = tasksDataInit()
 //const usersData = usersDataInit()
@@ -28,32 +27,35 @@ const usersApi = usersApiInit(usersServices)
 const tasksSite = tasksSiteInit(tasksServices)
 
 const PORT = 1904
-const swaggerDocument = yaml.load('./docs/tasks-api.yaml')
+
+const currentFileDir = url.fileURLToPath(new URL('.', import.meta.url));
+
+const swaggerDocument = yaml.load(`${currentFileDir}/docs/tasks-api.yaml`)
 
 console.log("Setting up server")
 let app = express()
 
-// Contained resources
-// - Tasks: /tasks
-// - Task:  /tasks/:id
-
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded())
-app.use('/site', express.static('./web/site/public'))
+app.use('/site', express.static('${currentFileDir}/web/site/public'))
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 // Handlebars view engine setup
-const currentFileDir = url.fileURLToPath(new URL('.', import.meta.url));
-const viewsDir = path.join(currentFileDir, 'web', 'site', 'views')
 app.set('view engine', 'hbs')
-app.set('views', viewsDir);
-
+const viewsDir = path.join(currentFileDir, 'web', 'site', 'views')
+app.set('views', viewsDir)
 hbs.registerPartials(path.join(viewsDir, 'partials'))
+
 hbs.handlebars.registerHelper("slb", function(idx, options) {
     return idx%2 == 0 ? options.fn(this) : ""
 })
+
+hbs.handlebars.registerHelper("strong", function(idx,  options) {
+    return idx%2 == 0 ? `<strong>${options.fn(this)}</strong>` : options.fn(this)
+})
+
 
 
 // Get All Tasks: GET /tasks
@@ -62,6 +64,7 @@ hbs.handlebars.registerHelper("slb", function(idx, options) {
 app.get('/site/tasks', tasksSite.getAllTasks)
 app.get('/site/tasks/:id', tasksSite.getTask)
 app.post('/site/tasks', tasksSite.insertTask)
+app.get('/site/tasks/:id/update', tasksSite.updateTaskForm)
 app.post('/site/tasks/:id/update', tasksSite.updateTask)
 app.post('/site/tasks/:id/delete', tasksSite.deleteTask)
 

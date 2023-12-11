@@ -70,8 +70,8 @@ export default function(taskServices) {
 
     async  function _deleteTask(req, rsp) {
         const id = req.params.id
-        const task = taskServices.deleteTask(id, req.token)
-        rsp.json(`Task with id ${id} deleted`)
+        const taskId = taskServices.deleteTask(id, req.token)
+        rsp.json(`Task with id ${taskId} deleted`)
     }
 
 

@@ -12,6 +12,7 @@ export default function(taskServices) {
         getTask: processRequest(_getTask),
         insertTask: processRequest(_insertTask),
         updateTask: processRequest(_updateTask),
+        updateTaskForm: processRequest(_updateTaskForm),
         deleteTask: processRequest(_deleteTask)
     }
 
@@ -35,33 +36,14 @@ export default function(taskServices) {
 
     async function  _getAllTasks(req, rsp) {
         const tasks = await taskServices.getAllTasks(req.token)
-        tasks.forEach((t, idx) => t.strong = idx%2)
-        rsp.render('tasks', {tasks: tasks })
-        //rsp.sendFile('./views/tasks.html', {root: './web/site/'})
-        // return taskServices.getAllTasks(req.token)
-        //     .then(tasks => rsp.json(tasks))
-        
+        tasks.forEach((t, idx) => t.strong = (idx%2 == 0))
+        rsp.render('tasks', {title: 'All tasks', tasks: tasks})
     }
 
     async function _getTask(req, rsp) {
         const id = req.params.id
         const task = await taskServices.getTask(id, req.token)
-        // var htmlTask = `
-        // <!DOCTYPE html>
-        //     <html>
-        //         <head>
-        //             <title>Task 1 details</title>
-        //         </head>
-        //         <body>
-        //             <h1>Task Details</h1>
-        //             <p>Task name: ${task.title}</p>
-        //             <p>Task description: ${task.description}</p>
-        //         </body>
-        //     </html>`
-        // rsp.type('html')
-        // rsp.send(htmlTask)
-        rsp.render('task', task)
-        
+        rsp.render('task', {title: `Task ${id} details`, task: task})
     }
 
     async function _insertTask(req, rsp) {
@@ -80,13 +62,22 @@ export default function(taskServices) {
             description: req.body.description
         }
         const task = await taskServices.updateTask(req.params.id, newTask, req.token)
-        rsp.json(task)
+        rsp.redirect("/site/tasks")
     }
+
+
+    async function _updateTaskForm(req, rsp) {
+        const id = req.params.id
+        const task = await taskServices.getTask(id, req.token)
+
+        rsp.render('task-update', {title: `Task ${id} update`, task: task})
+    }
+    
 
     async  function _deleteTask(req, rsp) {
         const id = req.params.id
         const task = taskServices.deleteTask(id, req.token)
-        rsp.json(`Task with id ${id} deleted`)
+        rsp.redirect("/site/tasks")
     }
 
 

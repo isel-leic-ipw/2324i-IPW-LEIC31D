@@ -59,9 +59,9 @@ export default function (usersServices, tasksData) {
     
     
     async function _getTask(taskId, userId) {
-        if(isNaN(Number(taskId))) {
-            throw errors.INVALID_ARGUMENT("taskId")
-        }
+        // if(isNaN(Number(taskId))) {
+        //     throw errors.INVALID_ARGUMENT("taskId")
+        // }
         const task = await tasksData.getTask(taskId)
         if(task.userId == userId)
             return task

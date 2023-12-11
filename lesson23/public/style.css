@@ -1,0 +1,10 @@
+* { 
+    border: 1px solid black;
+    background-color: red;
+}
+
+p1, h11  {
+    color: red;
+    font-size: 30px;
+    font-style: italic;
+}

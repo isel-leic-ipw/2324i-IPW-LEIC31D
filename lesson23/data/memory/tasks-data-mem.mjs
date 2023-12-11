@@ -1,5 +1,5 @@
 
-import errors from '../common/errors.mjs'
+import errors from '../../common/errors.mjs'
 
 const NUM_TASKS = 15
 
@@ -54,18 +54,17 @@ export default function () {
         return task
     }
 
-    async function updateTask(newTask) {
-        const task = await getTask(newTask.id)
-        task.title = newTask.title
-        task.description = newTask.description
+    async function updateTask(taskToUpdate) {
+        const task = await getTask(taskToUpdate.id)
+        task.title = taskToUpdate.title
+        task.description = taskToUpdate.description
         return task
     }
 
     async function deleteTask(taskId) {
         const taskIdx = getTaskIdx(taskId)
-        const task = TASKS[taskIdx]
         TASKS.splice(taskIdx, 1)
-        return task
+        return taskId
     }
 
 
