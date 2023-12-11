@@ -1,0 +1,12 @@
+<section>
+    <p>Task name: <a href="tasks/{{id}}">{{title}}</a></p>
+    <p>Task description: {{description}}</p>
+    
+
+    <form method="GET" action="/site/tasks/{{id}}/update">
+        <input type="submit" value="Edit Task">
+    </form>
+    <form method="POST" action="/site/tasks/{{id}}/delete">
+        <input type="submit" value="Delete Task">
+    </form>
+</section>
