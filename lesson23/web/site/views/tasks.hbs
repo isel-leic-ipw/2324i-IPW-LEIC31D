@@ -1,0 +1,26 @@
+<h1>All tasks</h1>
+
+<h2>Create a new Task</h2>
+<form method="POST" action="/site/tasks">
+    <p>Title: <input type="text" name="title" value=""></p>
+    <p>Description: <input type="text" name="description"></p>
+    <input type="submit" value="Create Task">
+</form>
+
+<hr>
+
+<section>
+    {{#each tasks}}
+        <section>
+            {{#slb @index}}
+                <strong>   
+            {{/slb}}
+                {{> taskPartial this}}            
+            {{#slb @index}}
+            </strong>
+            {{/slb}}
+        </section>               
+    {{/each}}
+</section>
+
+
