@@ -1,0 +1,20 @@
+@sitePrefix = http://localhost:1904/site/
+
+## Register
+### GET Register page
+
+GET http://localhost:1904/site/register
+
+### POST register information
+
+POST http://localhost:1904/site/register
+
+
+## Login
+### GET Login page
+
+GET http://localhost:1904/site/login
+
+### POST Login information
+
+POST http://localhost:1904/site/login
