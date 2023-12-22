@@ -1,0 +1,15 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title"><a href="tasks/{{id}}">{{title}}</a></h5>
+    <p class="card-text">{{description}}</p>
+    
+    <form style="display: inline" method="GET" action="/site/tasks/{{id}}/update">
+        <button style="display: inline" class="btn btn-primary" type="submit">Edit Task</button>
+    </form>
+    
+    <form style="display: inline" method="POST" action="/site/tasks/{{id}}/delete">
+        <button class="btn btn-primary" type="submit">Delete Task</button>
+    </form>
+
+  </div>
+</div>

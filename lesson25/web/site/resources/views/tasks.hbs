@@ -6,10 +6,10 @@
 <section>
     {{#each tasks}}
         <section>
-            {{#strong @index}}
+            {{#important @index}}
                 {{> taskPartial this}}
                 <hr>
-            {{/strong}}
+            {{/important}}
         </section>               
     {{/each}}
 </section>

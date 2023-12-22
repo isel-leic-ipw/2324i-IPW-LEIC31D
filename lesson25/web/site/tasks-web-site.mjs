@@ -36,14 +36,14 @@ export default function(taskServices) {
 
     async function  _getAllTasks(req, rsp) {
         const tasks = await taskServices.getAllTasks(req.token)
-        tasks.forEach((t, idx) => t.strong = (idx%2 == 0))
+        tasks.forEach((t, idx) => t.important = (idx%2 == 0))
         rsp.render('tasks', {title: 'All tasks', tasks: tasks})
     }
 
     async function _getTask(req, rsp) {
         const id = req.params.id
         const task = await taskServices.getTask(id, req.token)
-        rsp.render('task', {title: `Task ${id} details`, task: task})
+        rsp.render('task', {title: `Task ${id} details`, task: task, token: req.token})
     }
 
     async function _insertTask(req, rsp) {
@@ -76,7 +76,7 @@ export default function(taskServices) {
 
     async  function _deleteTask(req, rsp) {
         const id = req.params.id
-        const task = taskServices.deleteTask(id, req.token)
+        const task = await taskServices.deleteTask(id, req.token)
         rsp.redirect("/site/tasks")
     }
 
@@ -84,8 +84,8 @@ export default function(taskServices) {
     // Auxiliary module function
     function getToken(req) {
         // TODO: HAMMER TIME!!!! Handle toke properly 
-        //return req.token = "14d72b99-48f6-48d3-94d3-5a4dcfd96c80"
-        return req.token = "14d72b99-48f6-48d3-94d3-5a4dcfd96c81"
+        return req.token = "14d72b99-48f6-48d3-94d3-5a4dcfd96c80"
+        //return req.token = "14d72b99-48f6-48d3-94d3-5a4dcfd96c81"
     }
 }
 

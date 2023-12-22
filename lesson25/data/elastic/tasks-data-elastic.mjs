@@ -11,7 +11,7 @@ export default async function (indexName = 'tasks') {
     const URI_MANAGER = await uriManager(indexName)
 
     return {
-        getTasks: getTasksQuery,
+        getTasks: getTasksBody,
         getTask,
         updateTask,
         insertTask,

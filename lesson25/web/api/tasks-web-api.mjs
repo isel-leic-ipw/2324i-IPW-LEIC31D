@@ -19,7 +19,7 @@ export default function(taskServices) {
         return async function(req, rsp) {
             const token =  getToken(req)
             if(!token) {
-                rsp
+                return rsp
                     .status(401)
                     .json({error: `Invalid authentication token`})
             }
@@ -70,7 +70,7 @@ export default function(taskServices) {
 
     async  function _deleteTask(req, rsp) {
         const id = req.params.id
-        const taskId = taskServices.deleteTask(id, req.token)
+        const taskId = await taskServices.deleteTask(id, req.token)
         rsp.json(`Task with id ${taskId} deleted`)
     }
 

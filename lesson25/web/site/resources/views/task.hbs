@@ -1,0 +1,10 @@
+<div class="container">
+    {{> taskPartial this.task}}
+    <input class="btn btn-primary" type="button" value="Delete Task with client Script" id="b1">
+</div>
+
+<script type="application/ecmascript" src="/site/js/task.js">
+</script>
+<script type="application/ecmascript">
+    registerDelete('{{token}}')
+</script>
